@@ -9,7 +9,7 @@ Pod::Spec.new do |s|
   s.summary = 'Handy categories with lots of helpful methods'
   s.author = { 'Jay Marcyes' => 'jay@marcyes.com' }
   # TODO -- make this read in the readme file
-  s.description = '...'
+  s.description = 'Objective-C categories. Lots of helper methods I\'ve accumulated over time, in one convenient place so I can include them in multiple projects.'
   s.source_files = 'PlusPlus/*.{h,m}'
   s.requires_arc = true
 end
