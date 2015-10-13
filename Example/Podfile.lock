@@ -1,0 +1,14 @@
+PODS:
+  - PlusPlus (0.1.0)
+
+DEPENDENCIES:
+  - PlusPlus (from `../`)
+
+EXTERNAL SOURCES:
+  PlusPlus:
+    :path: ../
+
+SPEC CHECKSUMS:
+  PlusPlus: 92adfd0ee27c8511a49213be39b2d5acc3814f8b
+
+COCOAPODS: 0.39.0
