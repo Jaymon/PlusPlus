@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		480EA23D2C53C148AE48BE40 /* libPods-PlusPlusExample.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 46989A2FE9ADB9C66DA01B02 /* libPods-PlusPlusExample.a */; };
+		9518E8931C0ED79300E9CF73 /* NSStringTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 9518E8921C0ED79300E9CF73 /* NSStringTests.m */; };
 		95A79F391BCCE3580029F0FC /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 95A79F381BCCE3580029F0FC /* main.m */; };
 		95A79F3C1BCCE3580029F0FC /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 95A79F3B1BCCE3580029F0FC /* AppDelegate.m */; };
 		95A79F3F1BCCE3580029F0FC /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 95A79F3E1BCCE3580029F0FC /* ViewController.m */; };
@@ -31,6 +32,7 @@
 		46989A2FE9ADB9C66DA01B02 /* libPods-PlusPlusExample.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-PlusPlusExample.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		63A4B5FC3484C4665062CF72 /* Pods-PlusPlusExample.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PlusPlusExample.release.xcconfig"; path = "Pods/Target Support Files/Pods-PlusPlusExample/Pods-PlusPlusExample.release.xcconfig"; sourceTree = "<group>"; };
 		781BBF1DF9F21B5BD4EFCE09 /* Pods-PlusPlusExample.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PlusPlusExample.debug.xcconfig"; path = "Pods/Target Support Files/Pods-PlusPlusExample/Pods-PlusPlusExample.debug.xcconfig"; sourceTree = "<group>"; };
+		9518E8921C0ED79300E9CF73 /* NSStringTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSStringTests.m; sourceTree = "<group>"; };
 		95A79F341BCCE3580029F0FC /* PlusPlusExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PlusPlusExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		95A79F381BCCE3580029F0FC /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		95A79F3A1BCCE3580029F0FC /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -120,6 +122,7 @@
 		95A79F501BCCE3580029F0FC /* PlusPlusExampleTests */ = {
 			isa = PBXGroup;
 			children = (
+				9518E8921C0ED79300E9CF73 /* NSStringTests.m */,
 				95A79F511BCCE3580029F0FC /* PlusPlusExampleTests.m */,
 				95A79F531BCCE3580029F0FC /* Info.plist */,
 			);
@@ -297,6 +300,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				95A79F521BCCE3580029F0FC /* PlusPlusExampleTests.m in Sources */,
+				9518E8931C0ED79300E9CF73 /* NSStringTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -333,7 +337,7 @@
 		95A79F541BCCE3580029F0FC /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
+				ALWAYS_SEARCH_USER_PATHS = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
@@ -376,7 +380,7 @@
 		95A79F551BCCE3580029F0FC /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
+				ALWAYS_SEARCH_USER_PATHS = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
@@ -436,6 +440,7 @@
 		};
 		95A79F5A1BCCE3580029F0FC /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 781BBF1DF9F21B5BD4EFCE09 /* Pods-PlusPlusExample.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				INFOPLIST_FILE = PlusPlusExampleTests/Info.plist;

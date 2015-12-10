@@ -28,7 +28,7 @@
  *
  *  @return the color that sits percentage between self and color
  */
-- (UIColor *)colorBetween:(CGFloat)percentage toColor:(UIColor *)color;
+- (instancetype)colorBetween:(CGFloat)percentage toColor:(UIColor *)color;
 
 /**
  *  just makes it easier to create a color
@@ -41,5 +41,26 @@
  */
 + (instancetype)colorWithRGBa:(int) values, ...;
 + (instancetype)colorWithRGB:(int) values, ...;
+
+/**
+ *  Convert a string Hex color into a UIColor reference.
+ *
+ *  @code
+ *  - #AARRGGBB
+ *  - #ARGB
+ *  - #RRGGBB
+ *  - #RGB
+ *  @endcode
+ *
+ *  An alpha of 1.0 is assumed if not provided.
+ *
+ *  @see http://stackoverflow.com/questions/1560081/how-can-i-create-a-uicolor-from-a-hex-string
+ *
+ *  @param hexString A string representing a hex color.
+ *
+ *  @return A valid UIColor reference if the string provided was properly formatted
+ */
++ (instancetype)colorWithRGBString:(NSString *)hexString;
+
 
 @end

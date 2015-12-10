@@ -19,9 +19,31 @@
 - (NSLayoutConstraint *)leftContstraint
 {
     // http://rypress.com/tutorials/objective-c/data-types/nsset
-    NSSet *left = [NSSet setWithArray:@[@(NSLayoutAttributeLeft), @(NSLayoutAttributeLeftMargin), @(NSLayoutAttributeLeading), @(NSLayoutAttributeLeadingMargin)]];
+    NSSet *left = [NSSet setWithArray:@[@(NSLayoutAttributeLeft),
+                                        @(NSLayoutAttributeLeftMargin),
+                                        @(NSLayoutAttributeLeading),
+                                        @(NSLayoutAttributeLeadingMargin)]];
     
-    NSSet *right = [NSSet setWithArray:@[@(NSLayoutAttributeRight), @(NSLayoutAttributeRightMargin), @(NSLayoutAttributeTrailing), @(NSLayoutAttributeTrailingMargin)]];
+    NSSet *right = [NSSet setWithArray:@[@(NSLayoutAttributeRight),
+                                         @(NSLayoutAttributeRightMargin),
+                                         @(NSLayoutAttributeTrailing),
+                                         @(NSLayoutAttributeTrailingMargin)]];
+    
+    return [self constraintWithFirstAttributes:left orSecondAttributes:right];
+}
+
+- (NSLayoutConstraint *)rightContstraint
+{
+    // http://rypress.com/tutorials/objective-c/data-types/nsset
+    NSSet *right = [NSSet setWithArray:@[@(NSLayoutAttributeLeft),
+                                        @(NSLayoutAttributeLeftMargin),
+                                        @(NSLayoutAttributeLeading),
+                                        @(NSLayoutAttributeLeadingMargin)]];
+    
+    NSSet *left = [NSSet setWithArray:@[@(NSLayoutAttributeRight),
+                                         @(NSLayoutAttributeRightMargin),
+                                         @(NSLayoutAttributeTrailing),
+                                         @(NSLayoutAttributeTrailingMargin)]];
     
     return [self constraintWithFirstAttributes:left orSecondAttributes:right];
 }
@@ -105,7 +127,7 @@
 {
     UIView *v = nil;
     for (UIView *view in self.subviews) {
-        if ([view.accessibilityIdentifier isEqual: accessibilityIdentifier]) {
+        if ([view.accessibilityIdentifier isEqual:accessibilityIdentifier]) {
             v = (UIView *)view;
             break;
         }

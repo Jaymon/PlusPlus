@@ -1,16 +1,23 @@
 //  Created by Jay Marcyes on 8/11/15.
 
 #import "NSString+Plus.h"
+#import "UIColor+Plus.h"
 
 
 @implementation NSString (Plus)
 
-- (NSDictionary *)linksFromHTML
+- (BOOL)isHTTPLink
 {
-    NSMutableDictionary *dict = [NSMutableDictionary new];
+    return [self.lowercaseString hasPrefix:@"http"];
+}
+
+- (NSArray <NSTextCheckingResult *> *)linksFromHTMLWithPlainTextRanges
+{
+    NSMutableArray <NSTextCheckingResult *> *links = [NSMutableArray new];
     NSScanner *scanner = [NSScanner scannerWithString:self];
     NSString *tag = nil;
     NSString *body = nil;
+    NSInteger plainOffset = 0;
     
     // http://stackoverflow.com/questions/2606134/
     while ([scanner isAtEnd] == NO) {
@@ -19,42 +26,55 @@
         [scanner scanUpToString:@">" intoString:&tag];
         ///tag = [NSString stringWithFormat:@"%@>", tag];
         
-        if ([tag hasPrefix:@"<a"] || [tag hasPrefix:@"<A"]) {
-            ///enml = [enml stringByReplacingOccurrencesOfString:tag withString:@""];
+        if (tag) {
             
-            NSString *pattern = @"href=\"([^\"]+)\"";
-            NSRegularExpressionOptions options = NSRegularExpressionCaseInsensitive;
-            NSError *error = nil;
-            NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:pattern options:options error:&error];
+            scanner.scanLocation += [scanner isAtEnd] ? 0 : 1;
+            plainOffset += tag.length + 1;
+            NSInteger htmlOffset = scanner.scanLocation;
             
-            NSRange range = NSMakeRange(0, tag.length);
-            ///NSRange match = [regex rangeOfFirstMatchInString:self options:0 range:range];
-            NSTextCheckingResult *match = [regex firstMatchInString:tag options:0 range:range];
-            
+            NSTextCheckingResult *match = [tag firstRegularExpressionMatch:@"/^<a\\s+/i"];
             if (match) {
                 
-                NSRange group = [match rangeAtIndex:1];
-                NSString *link = [tag substringWithRange:group];
-                
-                [scanner scanUpToString:@"</a>" intoString:&body];
-                if (!body) {
-                    [scanner scanUpToString:@"</A>" intoString:&body];
+                match = [tag firstRegularExpressionMatch:@"/href=\"([^\"]+)\"/i"];
+                if (match) {
+                    
+                    NSRange group = [match rangeAtIndex:1];
+                    NSString *link = [tag substringWithRange:group];
+                    
+                    [scanner scanUpToString:@"</a>" intoString:&body];
+                    if (!body) {
+                        [scanner scanUpToString:@"</A>" intoString:&body];
+                    }
+                    
+                    if (body) {
+                        
+                        NSInteger htmlBodyLength = body.length;
+                        body = [body stripHTMLTags];
+                        
+                        NSRange bodyRange = NSMakeRange(htmlOffset - plainOffset, body.length);
+                        NSTextCheckingResult *linkMatch = [NSTextCheckingResult linkCheckingResultWithRange:bodyRange
+                                                                                                        URL:[NSURL URLWithString:link]];
+                        
+                        [links addObject:linkMatch];
+                        
+                        // compensate for removing html tags in the A text between <a> and </a>
+                        plainOffset += htmlBodyLength - body.length;
+                        
+                    }
+                    
                 }
                 
-                body = [[body substringFromIndex:1] stripTags];
-                dict[body] = link;
-                
             }
-            
+
         }
         
     }
     
-    return dict;
+    return (NSArray *)links;
     
 }
 
-- (NSString *)stripTags
+- (NSString *)stripHTMLTags
 {
     NSString *str = [self copy];
     NSScanner *scanner = [NSScanner scannerWithString:str];
@@ -76,5 +96,59 @@
 
 }
 
+- (NSString *)stringByReplacingFirstOccurrenceOfString:(NSString *)target withString:(NSString *)replacement
+{
+    NSString *ret = nil;
+    NSRange loc = [self rangeOfString:target];
+    if (NSNotFound != loc.location) {
+        ret = [self stringByReplacingCharactersInRange:loc withString:replacement];
+        
+    } else {
+        ret = [self copy];
+        
+    }
+    
+    return ret;
+}
+
+- (NSTextCheckingResult *)firstRegularExpressionMatch:(NSString *)regex
+{
+    NSString *delim = [regex substringToIndex:1];
+    NSRange optionsRange = [regex rangeOfString:delim options:NSBackwardsSearch];
+    NSString *pattern = [regex substringWithRange:NSMakeRange(1, optionsRange.location - 1)];
+    NSString *options = [regex substringFromIndex:optionsRange.location + 1];
+    NSRegularExpressionOptions regexOptions = 0;
+    
+    unichar optionsBuffer[options.length];
+    [options getCharacters:optionsBuffer];
+    
+    for (NSInteger i = 0; i < options.length; i++) {
+        unichar ch = optionsBuffer[i];
+        //NSLog(@"%hu", ch);
+        switch (ch) {
+            case 'i':
+                regexOptions |= NSRegularExpressionCaseInsensitive;
+                break;
+                
+            default:
+                NSAssert(NO, @"Unknown delimiter %hu", ch);
+                break;
+        }
+    }
+    
+    NSError *error = nil;
+    NSRegularExpression *trueRegex = [NSRegularExpression regularExpressionWithPattern:pattern
+                                                                               options:regexOptions
+                                                                                 error:&error];
+
+    NSTextCheckingResult *match = [trueRegex firstMatchInString:self options:0 range:NSMakeRange(0, self.length)];
+    return match;
+    
+}
+
+- (nullable UIColor *)colorValue
+{
+    return [UIColor colorWithRGBString:self];
+}
 
 @end
