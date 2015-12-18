@@ -35,30 +35,41 @@
             NSTextCheckingResult *match = [tag firstRegularExpressionMatch:@"/^<a\\s+/i"];
             if (match) {
                 
-                match = [tag firstRegularExpressionMatch:@"/href=\"([^\"]+)\"/i"];
-                if (match) {
+                NSArray *regexes = @[
+                                     @"/href=\"([^\"]+)/i",
+                                     @"/href='([^']+)/i",
+                                     @"/href=([^\\s>]+)/i"];
+                
+                for (NSString *regex in regexes) {
                     
-                    NSRange group = [match rangeAtIndex:1];
-                    NSString *link = [tag substringWithRange:group];
-                    
-                    [scanner scanUpToString:@"</a>" intoString:&body];
-                    if (!body) {
-                        [scanner scanUpToString:@"</A>" intoString:&body];
-                    }
-                    
-                    if (body) {
+                    match = [tag firstRegularExpressionMatch:regex];
+                    if (match) {
                         
-                        NSInteger htmlBodyLength = body.length;
-                        body = [body stripHTMLTags];
+                        NSRange group = [match rangeAtIndex:1];
+                        NSString *link = [tag substringWithRange:group];
                         
-                        NSRange bodyRange = NSMakeRange(htmlOffset - plainOffset, body.length);
-                        NSTextCheckingResult *linkMatch = [NSTextCheckingResult linkCheckingResultWithRange:bodyRange
-                                                                                                        URL:[NSURL URLWithString:link]];
+                        [scanner scanUpToString:@"</a>" intoString:&body];
+                        if (!body) {
+                            [scanner scanUpToString:@"</A>" intoString:&body];
+                        }
                         
-                        [links addObject:linkMatch];
+                        if (body) {
+                            
+                            NSInteger htmlBodyLength = body.length;
+                            body = [body stripHTMLTags];
+                            
+                            NSRange bodyRange = NSMakeRange(htmlOffset - plainOffset, body.length);
+                            NSTextCheckingResult *linkMatch = [NSTextCheckingResult linkCheckingResultWithRange:bodyRange
+                                                                                                            URL:[NSURL URLWithString:link]];
+                            
+                            [links addObject:linkMatch];
+                            
+                            // compensate for removing html tags in the A text between <a> and </a>
+                            plainOffset += htmlBodyLength - body.length;
+                            
+                        }
                         
-                        // compensate for removing html tags in the A text between <a> and </a>
-                        plainOffset += htmlBodyLength - body.length;
+                        break;
                         
                     }
                     

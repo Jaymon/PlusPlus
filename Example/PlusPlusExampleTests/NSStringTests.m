@@ -34,6 +34,20 @@
     
 }
 
+- (void)testNonHttpLinksFromHTML
+{
+    NSString *html = @"<a href=\"/foo/bar\">foo</a>";
+    NSArray <NSTextCheckingResult *> *links = [html linksFromHTMLWithPlainTextRanges];
+    XCTAssertEqual(1, links.count);
+    XCTAssertEqualObjects(@"/foo/bar", [links[0].URL absoluteString]);
+    
+    html = @"<a href=\"#anchor\">foo</a>";
+    links = [html linksFromHTMLWithPlainTextRanges];
+    XCTAssertEqual(1, links.count);
+    XCTAssertEqualObjects(@"#anchor", [links[0].URL absoluteString]);
+    
+}
+
 - (void)testLinksFromHTMLMultiLinksUnicode
 {
     NSString *html = @"несколько <a href=\"http://1.com\">знать</a> 𠸎 <a href=\"http://2.com\">𠻺</a> 𠾼";
@@ -45,6 +59,25 @@
     
     XCTAssertEqualObjects(@"𠻺", [plain substringWithRange:links[1].range]);
     XCTAssertEqualObjects(@"http://2.com", [links[1].URL absoluteString]);
+    
+}
+
+- (void)testAltLinkSyntaxFromHTML
+{
+    NSString *html = @"<a href='http://1.com'>1</a>";
+    NSArray <NSTextCheckingResult *> *links = [html linksFromHTMLWithPlainTextRanges];
+    XCTAssertEqual(1, [links count]);
+    XCTAssertEqualObjects(@"http://1.com", [links[0].URL absoluteString]);
+    
+    html = @"<a href=http://2.com class=\"something\">2</a>";
+    links = [html linksFromHTMLWithPlainTextRanges];
+    XCTAssertEqual(1, [links count]);
+    XCTAssertEqualObjects(@"http://2.com", [links[0].URL absoluteString]);
+    
+    html = @"<a href=http://3.com>3</a>";
+    links = [html linksFromHTMLWithPlainTextRanges];
+    XCTAssertEqual(1, [links count]);
+    XCTAssertEqualObjects(@"http://3.com", [links[0].URL absoluteString]);
     
 }
 
@@ -145,7 +178,8 @@
     html = @"<a href=http://foo.com/>foo</a>";
     links = [html linksFromHTMLWithPlainTextRanges];
     plain = [html stripHTMLTags];
-    XCTAssertEqual(links.count, 0);
+    XCTAssertEqual(1, links.count);
+    XCTAssert([[plain substringWithRange:links[0].range] isEqualToString:@"foo"]);
 
 }
 
