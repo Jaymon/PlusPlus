@@ -12,6 +12,12 @@
 
 @implementation NSStringTests
 
+- (void)testLinebreakCount
+{
+    NSString *text = @"foo\r\n\r\nbar\nche\rbaz\r\r\nboom\r\r";
+    XCTAssertEqual(8, text.linebreakCount);
+}
+
 - (void)testFirstRegularExpressionMatch
 {
     NSString *str = @"foo bar che";
@@ -189,32 +195,71 @@
  *  accounted for :(
  */
 - (void)testPastedLinks {
-    ///NSString *html = @"<!DOCTYPE html><p style=\"box-sizing: border-box; margin: 0px 0px 1.5em; font-family: Balto, Helvetica, Arial, 'Nimbus Sans L', sans-serif; font-weight: normal; font-size: 1.3em; -webkit-font-smoothing: antialiased; text-rendering: optimizelegibility; color: rgb(76, 78, 77); font-style: normal; font-variant-caps: normal; letter-spacing: normal; orphans: auto; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: auto; word-spacing: 0px; -webkit-tap-highlight-color: rgba(26, 26, 26, 0.301961); -webkit-text-size-adjust: 100%; -webkit-text-stroke-width: 0px;\">It's really hard to overstate how screwed Marco Rubio is.</p><p style=\"box-sizing: border-box; margin: 0px 0px 1.5em; font-family: Balto, Helvetica, Arial, 'Nimbus Sans L', sans-serif; font-weight: normal; font-size: 1.3em; -webkit-font-smoothing: antialiased; text-rendering: optimizelegibility; color: rgb(76, 78, 77); font-style: normal; font-variant-caps: normal; letter-spacing: normal; orphans: auto; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: auto; word-spacing: 0px; -webkit-tap-highlight-color: rgba(26, 26, 26, 0.301961); -webkit-text-size-adjust: 100%; -webkit-text-stroke-width: 0px;\">I'm not even talking about<span class=\"Apple-converted-space\"> </span><a href=\"http://www.vox.com/2016/3/15/11242326/marco-rubio-drop-out\" style=\"box-sizing: border-box; image-rendering: optimizequality; transition: all 100ms ease; -webkit-transition: all 100ms ease; text-decoration: none; color: rgb(79, 113, 119); font-weight: 700; -webkit-font-smoothing: antialiased; background-image: none !important; font-size: 1em !important; background-position: initial initial !important; background-repeat: initial initial !important;\">his failed presidential campaign</a>. That's over, his humiliation is complete. But he also has no political career to speak of after this. He's retiring from his Senate seat, and while he could<span class=\"Apple-converted-space\"> </span><em style=\"box-sizing: border-box;\">theoretically</em><span class=\"Apple-converted-space\"> </span>jump back in that race, two GOP congress members and Florida's lieutenant governor are already running, making a late entry awkward to say the least.</p>";
     
-    ///NSString *text = @"It's really hard to overstate how screwed Marco Rubio is.\n\nI'm not even talking about his failed presidential campaign. That's over, his humiliation is complete. But he also has no political career to speak of after this. He's retiring from his Senate seat, and while he could theoretically jump back in that race, two GOP congress members and Florida's lieutenant governor are already running, making a late entry awkward to say the least.";
+    NSString *html = @"<!DOCTYPE html><p style=\"box-sizing: border-box; margin: 0px 0px 1.5em; font-family: Balto, Helvetica, Arial, 'Nimbus Sans L', sans-serif; font-weight: normal; font-size: 1.3em; -webkit-font-smoothing: antialiased; text-rendering: optimizelegibility; color: rgb(76, 78, 77); font-style: normal; font-variant-caps: normal; letter-spacing: normal; orphans: auto; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: auto; word-spacing: 0px; -webkit-tap-highlight-color: rgba(26, 26, 26, 0.301961); -webkit-text-size-adjust: 100%; -webkit-text-stroke-width: 0px;\">It's really hard to overstate how screwed Marco Rubio is.</p><p style=\"box-sizing: border-box; margin: 0px 0px 1.5em; font-family: Balto, Helvetica, Arial, 'Nimbus Sans L', sans-serif; font-weight: normal; font-size: 1.3em; -webkit-font-smoothing: antialiased; text-rendering: optimizelegibility; color: rgb(76, 78, 77); font-style: normal; font-variant-caps: normal; letter-spacing: normal; orphans: auto; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: auto; word-spacing: 0px; -webkit-tap-highlight-color: rgba(26, 26, 26, 0.301961); -webkit-text-size-adjust: 100%; -webkit-text-stroke-width: 0px;\">I'm not even talking about<span class=\"Apple-converted-space\"> </span><a href=\"http://www.vox.com/2016/3/15/11242326/marco-rubio-drop-out\" style=\"box-sizing: border-box; image-rendering: optimizequality; transition: all 100ms ease; -webkit-transition: all 100ms ease; text-decoration: none; color: rgb(79, 113, 119); font-weight: 700; -webkit-font-smoothing: antialiased; background-image: none !important; font-size: 1em !important; background-position: initial initial !important; background-repeat: initial initial !important;\">his failed presidential campaign</a>. That's over, his humiliation is complete. But he also has no political career to speak of after this. He's retiring from his Senate seat, and while he could<span class=\"Apple-converted-space\"> </span><em style=\"box-sizing: border-box;\">theoretically</em><span class=\"Apple-converted-space\"> </span>jump back in that race, two GOP congress members and Florida's lieutenant governor are already running, making a late entry awkward to say the least.</p>";
     
-    
-    ///NSString *html = @"foo <a href=\".\">bar</a>";
-    ///NSString *text = @"foo bar";
-    
-    ///NSString *html = @"<a href=\"http://foo.com/\">foo</a> and <a href=\"http://bar.com/\">bar</a>";
-    ///NSString *text = @"foo and bar";
-    
-    ///NSString *html = @"<p>foo bar</p><p>che <a href=\".\">baz</a> and boom</p>";
-    ///NSString *text = @"foo bar\r\n\r\nche baz and boom\r\n";
-    
-    ///NSString *html = @"<p>foo bar</p> <p>che <a href=\".\">baz</a> and boom</p>";
-    ///NSString *text = @"foo bar che baz and boom";
-    
-    NSString *html = @"<!DOCTYPE html><p>It's really hard to overstate how screwed Marco Rubio is.</p><p>I'm not even talking about<span class=\"Apple-converted-space\"> </span><a href=\"http://www.vox.com/2016/3/15/11242326/marco-rubio-drop-out\">his failed presidential campaign</a>. That's over, his humiliation is complete. But he also has no political career to speak of after this. He's retiring from his Senate seat, and while he could<span class=\"Apple-converted-space\"> </span><em>theoretically</em><span class=\"Apple-converted-space\"> </span>jump back in that race, two GOP congress members and Florida's lieutenant governor are already running, making a late entry awkward to say the least.</p>";
-
     NSString *text = @"It's really hard to overstate how screwed Marco Rubio is.\n\nI'm not even talking about his failed presidential campaign. That's over, his humiliation is complete. But he also has no political career to speak of after this. He's retiring from his Senate seat, and while he could theoretically jump back in that race, two GOP congress members and Florida's lieutenant governor are already running, making a late entry awkward to say the least.";
     
     NSArray <NSTextCheckingResult *> *links = [html linksFromHTMLWithRangesFor:text];
-    NSLog(@"%@", links);
-    NSLog(@"%@", [text substringWithRange:links[0].range]);
-    ///NSLog(@"%@", [text substringWithRange:links[1].range]);
+    XCTAssertEqual(1, links.count);
+    XCTAssert([[text substringWithRange:links[0].range] isEqualToString:@"his failed presidential campaign"]);
+    
+    
+    html = @"<!DOCTYPE html><p>It's really hard to overstate how screwed Marco Rubio is.</p><p>I'm not even talking about<span class=\"Apple-converted-space\"> </span><a href=\"http://www.vox.com/2016/3/15/11242326/marco-rubio-drop-out\">his failed presidential campaign</a>. That's over, his humiliation is complete. But he also has no political career to speak of after this. He's retiring from his Senate seat, and while he could<span class=\"Apple-converted-space\"> </span><em>theoretically</em><span class=\"Apple-converted-space\"> </span>jump back in that race, two GOP congress members and Florida's lieutenant governor are already running, making a late entry awkward to say the least.</p>";
+
+    text = @"It's really hard to overstate how screwed Marco Rubio is.\n\nI'm not even talking about his failed presidential campaign. That's over, his humiliation is complete. But he also has no political career to speak of after this. He's retiring from his Senate seat, and while he could theoretically jump back in that race, two GOP congress members and Florida's lieutenant governor are already running, making a late entry awkward to say the least.";
+    
+    links = [html linksFromHTMLWithRangesFor:text];
+    XCTAssertEqual(1, links.count);
+    XCTAssert([[text substringWithRange:links[0].range] isEqualToString:@"his failed presidential campaign"]);
     
 }
+
+- (void)testPlainHtmlMismatch {
+
+    ///NSString *html = @"foo <a href=\".\">bar</a>";
+    ///NSString *text = @"foo bar";
+
+    ///NSString *html = @"<a href=\"http://foo.com/\">foo</a> and <a href=\"http://bar.com/\">bar</a>";
+    ///NSString *text = @"foo and bar";
+    
+//    NSArray <NSTextCheckingResult *> *links = [html linksFromHTMLWithRangesFor:text];
+//    NSLog(@"%@", links);
+//    NSLog(@"%@", [text substringWithRange:links[0].range]);
+
+    NSString *html = @"<p>foo bar</p><p>che <a href=\".\">baz</a> and boom</p>";
+    NSString *text = @"foo bar\r\n\r\nche baz and boom\r\n";
+    NSArray <NSTextCheckingResult *> *links = [html linksFromHTMLWithRangesFor:text];
+    XCTAssertEqual(1, links.count);
+    XCTAssert([[text substringWithRange:links[0].range] isEqualToString:@"baz"]);
+    
+    
+    html = @"<p>foo bar</p><p>che <a href=\".\">baz and <em>boom</em></a></p>";
+    text = @"foo bar\r\n\r\nche baz and boom\r\n";
+    links = [html linksFromHTMLWithRangesFor:text];
+    XCTAssertEqual(1, links.count);
+    XCTAssert([[text substringWithRange:links[0].range] isEqualToString:@"baz and boom"]);
+    
+    
+    html = @"<p>foo bar</p>\r\n<p>che <a href=\".\">baz and <em>boom</em></a></p>";
+    text = @"foo bar\r\n\r\nche baz and boom\r\n";
+    links = [html linksFromHTMLWithRangesFor:text];
+    XCTAssertEqual(1, links.count);
+    XCTAssert([[text substringWithRange:links[0].range] isEqualToString:@"baz and boom"]);
+    
+    
+    html = @"<p>foo bar</p><p>che <a href=\".\">baz</a></p><p>and <a href=\".\">boom</a></p>";
+    text = @"foo bar\r\n\r\nche baz\r\n\r\nand boom\r\n";
+    links = [html linksFromHTMLWithRangesFor:text];
+    XCTAssertEqual(2, links.count);
+    XCTAssert([[text substringWithRange:links[0].range] isEqualToString:@"baz"]);
+    XCTAssert([[text substringWithRange:links[1].range] isEqualToString:@"boom"]);
+
+
+}
+
+// FIXME: the linksFromHTMLWithRangesFor: method will fail when the html body between
+// the <a> tags is different than the plaintext, so if the html was like: <a ...><p>foo</p><p>bar</p></a>
+// and the plaintext was: foo\n\nbar\n it would fail
 
 @end

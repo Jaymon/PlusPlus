@@ -92,7 +92,7 @@
     return [self colorWithRGBa:red, green, blue, 1.0];
 }
 
-+ (instancetype)colorWithRGBString:(NSString *)hexString
++ (instancetype)colorWithHex:(NSString *)hexString
 {
     NSString *colorString = [[hexString stringByReplacingOccurrencesOfString:@"#" withString:@""] uppercaseString];
     CGFloat alpha, red, blue, green;

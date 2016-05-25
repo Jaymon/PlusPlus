@@ -21,7 +21,7 @@
 
 
 /**
- *  this will create a color that is a cross betwen self and the passed in color
+ *  this will create a color that is percentage betwen self and the passed in color
  *
  *  @param  percentage  the percent (between 0.0-1.0) you want between self and color
  *  @param  color   the final color you are shooting for
@@ -60,7 +60,7 @@
  *
  *  @return A valid UIColor reference if the string provided was properly formatted
  */
-+ (instancetype)colorWithRGBString:(NSString *)hexString;
++ (instancetype)colorWithHex:(NSString *)hexString;
 
 
 @end

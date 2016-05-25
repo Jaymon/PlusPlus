@@ -13,7 +13,7 @@
 
 - (NSUInteger)linebreakCount
 {
-    NSString *regex = @"/\r\n|\n|\r(?!\n)/";
+    NSString *regex = @"\r\n|\n|\r(?!\n)";
     return [[regex regularExpressionValue] numberOfMatchesInString:self options:0 range:NSMakeRange(0, self.length)];
 }
 
@@ -35,6 +35,11 @@
     NSInteger plainStartOffset = 0;
     NSInteger plainStopOffset = 0;
     NSUInteger tagLengthCount = 0; // holds how many chars total of html is in a tag, between < and >
+    NSString *plainHtml = [self stripHTMLTags];
+    NSInteger rangeBuffer = plainText.length - plainHtml.length;
+    NSArray *linkRegexes = @[@"(?i)href=\"([^\"]+)",
+                         @"(?i)href='([^']+)",
+                         @"(?i)href=([^\\s>]+)"];
     
     // http://stackoverflow.com/questions/2606134/
     while ([scanner isAtEnd] == NO) {
@@ -47,23 +52,16 @@
             tagLengthCount += tag.length + 1;
             scanner.scanLocation += [scanner isAtEnd] ? 0 : 1; // move passed closing >
             
-            plainStartOffset = scanner.scanLocation - tagLengthCount;
-            
-            NSLog(@"tag %@ with location %lu", tag, scanner.scanLocation);
-            
             ///NSTextCheckingResult *match = [tag firstRegularExpressionMatch:@"/^<a\\s+/i"];
             NSTextCheckingResult *match = [tag firstRegularExpressionMatch:@"(?i)^<a\\s+"];
             if (match) {
                 
-                NSArray *regexes = @[@"(?i)href=\"([^\"]+)",
-                                     @"(?i)href='([^']+)",
-                                     @"(?i)href=([^\\s>]+)"];
-                
-                for (NSString *regex in regexes) {
+                for (NSString *regex in linkRegexes) {
                     
                     match = [tag firstRegularExpressionMatch:regex];
                     if (match) {
-                        
+            
+                        plainStartOffset = scanner.scanLocation - tagLengthCount;
                         NSRange group = [match rangeAtIndex:1];
                         NSString *link = [tag substringWithRange:group];
                         
@@ -74,41 +72,31 @@
                         
                         if (body) {
                             
-                            NSLog(@"body %@ with location %lu", body, scanner.scanLocation);
+                            NSString *plainHtmlBody = [body stripHTMLTags];
+                            tagLengthCount += body.length - plainHtmlBody.length; // account for non <a> tags between the <a>'s
                             
-                            ///tagLengthCount += body.length;
-                            
-                            NSString *htmlSub = [self substringToIndex:plainStartOffset + tagLengthCount];
-                            NSString *plainSub = [plainText substringToIndex:plainStartOffset];
-                            NSInteger diffLength = plainSub.length - (htmlSub.length - tagLengthCount);
-                            NSLog(@"diffLength: %lu, plain %lu, html %lu", diffLength, plainSub.length, htmlSub.length);
-                            NSLog(@"htmlSub %@, plainSub %@", htmlSub, plainSub);
-                            
-                            
-                            NSString *plainBody = [body stripHTMLTags];
-                            tagLengthCount += body.length - plainBody.length;
                             plainStopOffset = scanner.scanLocation - tagLengthCount;
-//
-//                            NSInteger htmlBodyLength = body.length;
-//                            body = [body stripHTMLTags];
-//
-//                            NSInteger htmlOffsetLinebreakCount = [[self substringToIndex:htmlOffset] linebreakCount];
-//                            NSInteger htmlLengthLinebreakCount = [[self substringWithRange:NSMakeRange(htmlOffset, htmlBodyLength)] linebreakCount];
-//                            
-//                            NSInteger plainOffsetLinebreakCount = [[plainText substringToIndex:plainOffset] linebreakCount];
-//                            NSInteger plainLengthLinebreakCount = [[plainText substringWithRange:NSMakeRange(plainOffset, body.length)] linebreakCount];
-//                            
-//                            NSInteger linebreakOffsetCount = plainOffsetLinebreakCount - htmlOffsetLinebreakCount;
-//                            NSInteger linebreakLengthCount = plainLengthLinebreakCount - htmlLengthLinebreakCount;
-//                            
-                            NSRange bodyRange = NSMakeRange(plainStartOffset, plainStopOffset - plainStartOffset);
+                            NSUInteger plainLength = plainStopOffset - plainStartOffset;
+                            
+                            NSUInteger location = plainStartOffset - rangeBuffer;
+                            // we want to check a range of buffer on either side
+                            NSRange range = NSMakeRange(location,
+                                                  MIN(plainHtmlBody.length + (rangeBuffer << 2), plainText.length - location));
+                            NSString *plainTextBody = [plainText substringWithRange:range];
+                            NSRange actualRange = [plainTextBody rangeOfString:plainHtmlBody];
+                            if (actualRange.location != NSNotFound) {
+                                
+                                plainStartOffset -= rangeBuffer;
+                                plainStartOffset += actualRange.location;
+                                plainLength = actualRange.length;
+                                
+                            }
+                            
+                            NSRange bodyRange = NSMakeRange(plainStartOffset, plainLength);
                             NSTextCheckingResult *linkMatch = [NSTextCheckingResult linkCheckingResultWithRange:bodyRange
                                                                                                             URL:[NSURL URLWithString:link]];
                             
                             [links addObject:linkMatch];
-                            
-                            // compensate for removing html tags in the A text between <a> and </a>
-                            ///plainOffset += (htmlBodyLength - body.length) + linebreakOffsetCount + linebreakLengthCount;
                             
                         }
                         
@@ -120,8 +108,6 @@
                 
             }
 
-        } else {
-            // TODO: update plain offset?
         }
         
     }
@@ -174,7 +160,7 @@
 
 - (nullable UIColor *)colorValue
 {
-    return [UIColor colorWithRGBString:self];
+    return [UIColor colorWithHex:self];
 }
 
 
