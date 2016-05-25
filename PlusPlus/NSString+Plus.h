@@ -10,6 +10,12 @@
 @property (nonatomic, readonly) BOOL isHTTPLink;
 
 /**
+ *  how many linebreaks the given string has
+ */
+@property (nonatomic, readonly) NSUInteger linebreakCount;
+
+
+/**
  *  returns an array of the links found in the href attribute of the string's HTML <a> tags
  *
  *  what is a little strange is this will return those URLs with a range for the string that
@@ -25,6 +31,8 @@
  *  @return a list of NSTextCheckingResult instances with .range and .url set
  */
 - (nonnull NSArray <NSTextCheckingResult *> *)linksFromHTMLWithPlainTextRanges;
+
+- (nonnull NSArray <NSTextCheckingResult *> *)linksFromHTMLWithRangesFor:(nonnull NSString *)plainText;
 
 /**
  *  removes all HTML tags from the string
@@ -43,10 +51,19 @@
  */
 - (nonnull NSString *)stringByReplacingFirstOccurrenceOfString:(nonnull NSString *)target withString:(nonnull NSString *)replacement;
 
+
 /**
- *  find the first match of the given regular expression, this is a little different
- *  than a traditional regex in that it uses grep/sed/awk/perl/php's regex syntax with
- *  delimiters, so ignore case foo would be /foo/i
+ *  if the string contains something like #RRGGBB then it will return a UIColor instance
+ *
+ *  @return a UIColor instance that contains the color of the RGB string value
+ */
+- (nullable UIColor *)colorValue;
+
+
+/**
+ *  find the first match of the given regular expression
+ *
+ *  the regex should be defined according to `regularExpressionValue`
  *
  *  @param regex the delimited regex, currently only i (ignore case) is supported
  *
@@ -55,10 +72,21 @@
 - (nullable NSTextCheckingResult *)firstRegularExpressionMatch:(nonnull NSString *)regex;
 
 /**
- *  if the string contains something like #RRGGBB then it will return a UIColor instance
+ *  if the string contains a regular expression like /foo/i then return a NSRegularExpression
  *
- *  @return a UIColor instance that contains the color of the RGB string value
+ *  If you would like to make the regex case-insensitive, or the like, then you should follow the
+ *  syntax rules and start your regex with (?i), the options are (?ismx), so if I wanted to do a
+ *  case-insensitive search for foo, I could do [@"(?i)foo" regularExpressionValue]:
+ *
+ *  i - case-insensitive match
+ *  x - allow comments and whitespace
+ *  s - dot matches newlines also
+ *  m - multiline, ^ and $ will match at lines
+ *
+ *  @link   https://developer.apple.com/library/mac/documentation/Foundation/Reference/NSRegularExpression_Class/
+ *
+ *  @return a NSRegularExpression instance
  */
-- (nullable UIColor *)colorValue;
+- (nullable NSRegularExpression *)regularExpressionValue;
 
 @end

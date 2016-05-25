@@ -16,18 +16,18 @@
 {
     NSString *str = @"foo bar che";
     
-    NSString *regex = @"/bar/";
+    NSString *regex = @"bar";
     NSTextCheckingResult *match = [str firstRegularExpressionMatch:regex];
     NSString *matchedStr = [str substringWithRange:[match rangeAtIndex:0]];
     XCTAssertEqualObjects(@"bar", matchedStr);
     
-    regex = @"/bar/i";
+    regex = @"(?i)bar";
     str = @"foo BAR che";
     match = [str firstRegularExpressionMatch:regex];
     matchedStr = [str substringWithRange:[match rangeAtIndex:0]];
     XCTAssertEqualObjects(@"BAR", matchedStr);
     
-    regex = @"/bar/";
+    regex = @"bar";
     str = @"foo che";
     match = [str firstRegularExpressionMatch:regex];
     XCTAssertEqualObjects(nil, match);
@@ -181,6 +181,40 @@
     XCTAssertEqual(1, links.count);
     XCTAssert([[plain substringWithRange:links[0].range] isEqualToString:@"foo"]);
 
+}
+
+/**
+ *  so it turns out that copying html in iOS will keep newlines in the plaintext version
+ *  of the paste but strip all the newlines in the html version, so that has to be
+ *  accounted for :(
+ */
+- (void)testPastedLinks {
+    ///NSString *html = @"<!DOCTYPE html><p style=\"box-sizing: border-box; margin: 0px 0px 1.5em; font-family: Balto, Helvetica, Arial, 'Nimbus Sans L', sans-serif; font-weight: normal; font-size: 1.3em; -webkit-font-smoothing: antialiased; text-rendering: optimizelegibility; color: rgb(76, 78, 77); font-style: normal; font-variant-caps: normal; letter-spacing: normal; orphans: auto; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: auto; word-spacing: 0px; -webkit-tap-highlight-color: rgba(26, 26, 26, 0.301961); -webkit-text-size-adjust: 100%; -webkit-text-stroke-width: 0px;\">It's really hard to overstate how screwed Marco Rubio is.</p><p style=\"box-sizing: border-box; margin: 0px 0px 1.5em; font-family: Balto, Helvetica, Arial, 'Nimbus Sans L', sans-serif; font-weight: normal; font-size: 1.3em; -webkit-font-smoothing: antialiased; text-rendering: optimizelegibility; color: rgb(76, 78, 77); font-style: normal; font-variant-caps: normal; letter-spacing: normal; orphans: auto; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: auto; word-spacing: 0px; -webkit-tap-highlight-color: rgba(26, 26, 26, 0.301961); -webkit-text-size-adjust: 100%; -webkit-text-stroke-width: 0px;\">I'm not even talking about<span class=\"Apple-converted-space\"> </span><a href=\"http://www.vox.com/2016/3/15/11242326/marco-rubio-drop-out\" style=\"box-sizing: border-box; image-rendering: optimizequality; transition: all 100ms ease; -webkit-transition: all 100ms ease; text-decoration: none; color: rgb(79, 113, 119); font-weight: 700; -webkit-font-smoothing: antialiased; background-image: none !important; font-size: 1em !important; background-position: initial initial !important; background-repeat: initial initial !important;\">his failed presidential campaign</a>. That's over, his humiliation is complete. But he also has no political career to speak of after this. He's retiring from his Senate seat, and while he could<span class=\"Apple-converted-space\"> </span><em style=\"box-sizing: border-box;\">theoretically</em><span class=\"Apple-converted-space\"> </span>jump back in that race, two GOP congress members and Florida's lieutenant governor are already running, making a late entry awkward to say the least.</p>";
+    
+    ///NSString *text = @"It's really hard to overstate how screwed Marco Rubio is.\n\nI'm not even talking about his failed presidential campaign. That's over, his humiliation is complete. But he also has no political career to speak of after this. He's retiring from his Senate seat, and while he could theoretically jump back in that race, two GOP congress members and Florida's lieutenant governor are already running, making a late entry awkward to say the least.";
+    
+    
+    ///NSString *html = @"foo <a href=\".\">bar</a>";
+    ///NSString *text = @"foo bar";
+    
+    ///NSString *html = @"<a href=\"http://foo.com/\">foo</a> and <a href=\"http://bar.com/\">bar</a>";
+    ///NSString *text = @"foo and bar";
+    
+    ///NSString *html = @"<p>foo bar</p><p>che <a href=\".\">baz</a> and boom</p>";
+    ///NSString *text = @"foo bar\r\n\r\nche baz and boom\r\n";
+    
+    ///NSString *html = @"<p>foo bar</p> <p>che <a href=\".\">baz</a> and boom</p>";
+    ///NSString *text = @"foo bar che baz and boom";
+    
+    NSString *html = @"<!DOCTYPE html><p>It's really hard to overstate how screwed Marco Rubio is.</p><p>I'm not even talking about<span class=\"Apple-converted-space\"> </span><a href=\"http://www.vox.com/2016/3/15/11242326/marco-rubio-drop-out\">his failed presidential campaign</a>. That's over, his humiliation is complete. But he also has no political career to speak of after this. He's retiring from his Senate seat, and while he could<span class=\"Apple-converted-space\"> </span><em>theoretically</em><span class=\"Apple-converted-space\"> </span>jump back in that race, two GOP congress members and Florida's lieutenant governor are already running, making a late entry awkward to say the least.</p>";
+
+    NSString *text = @"It's really hard to overstate how screwed Marco Rubio is.\n\nI'm not even talking about his failed presidential campaign. That's over, his humiliation is complete. But he also has no political career to speak of after this. He's retiring from his Senate seat, and while he could theoretically jump back in that race, two GOP congress members and Florida's lieutenant governor are already running, making a late entry awkward to say the least.";
+    
+    NSArray <NSTextCheckingResult *> *links = [html linksFromHTMLWithRangesFor:text];
+    NSLog(@"%@", links);
+    NSLog(@"%@", [text substringWithRange:links[0].range]);
+    ///NSLog(@"%@", [text substringWithRange:links[1].range]);
+    
 }
 
 @end
