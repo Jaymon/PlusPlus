@@ -14,6 +14,24 @@
  */
 @property (nonatomic, readonly) NSUInteger linebreakCount;
 
+/**
+ *  given a list of suffixes, return YES if one of them matches the end of this string
+ *
+ *  @param suffixes an array of suffixes to run hasSuffix: against
+ *
+ *  @return YES if one of the suffixes matches, NO otherwise
+ */
+- (bool)anySuffix:(NSArray <NSString *> *)suffixes;
+
+/**
+ *  given a list of strings, return YES if one of them matches this string exactly
+ *
+ *  @param strings the list of strings to match against this string
+ *
+ *  @return YES if one string matches, NO otherwise
+ */
+- (bool)any:(NSArray <NSString *> *)strings;
+
 
 /**
  *  returns an array of the links found in the href attribute of the string's HTML <a> tags

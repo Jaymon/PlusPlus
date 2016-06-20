@@ -13,8 +13,33 @@
 
 - (NSUInteger)linebreakCount
 {
+    // other way: https://developer.apple.com/library/mac/documentation/Cocoa/Conceptual/TextLayout/Tasks/CountLines.html
     NSString *regex = @"\r\n|\n|\r(?!\n)";
     return [[regex regularExpressionValue] numberOfMatchesInString:self options:0 range:NSMakeRange(0, self.length)];
+}
+
+- (bool)anySuffix:(NSArray<NSString *> *)suffixes
+{
+    bool hasSuffix = NO;
+    for (NSString *suffix in suffixes) {
+        if ([self hasSuffix:suffix]) {
+            hasSuffix = YES;
+            break;
+        }
+    }
+    return hasSuffix;
+}
+
+- (bool)any:(NSArray<NSString *> *)strings
+{
+    bool has = NO;
+    for (NSString *s in strings) {
+        if ([self isEqualToString:s]) {
+            has = YES;
+            break;
+        }
+    }
+    return has;
 }
 
 
