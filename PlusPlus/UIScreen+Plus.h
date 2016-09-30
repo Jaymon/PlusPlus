@@ -36,6 +36,22 @@
 + (CGSize)resolution;
 
 /**
+ return the resolution not in points but in pixels
+
+ @link  http://stackoverflow.com/questions/14003955/getting-the-screen-resolution-in-iphone
+ @return cgsize of the height and width
+ */
++ (CGSize)pixelResolution;
+
++ (CGSize)resolutionThreeFiveInch;
++ (CGSize)resolutionFourInch;
++ (CGSize)resolutionFourSevenInch;
++ (CGSize)resolutionFiveFiveInch;
++ (CGSize)resolutionSevenNineInch;
++ (CGSize)resolutionNineSevenInch;
++ (CGSize)resolutionTwelveNineInch;
+
+/**
  *  the iPhone 4 device resolution
  *
  *  @see http://www.iosres.com/
@@ -52,6 +68,7 @@
  *  @return device's width and height in CGSize
  */
 + (CGSize)iPhone5Resolution;
++ (CGSize)iPhoneSEResolution;
 
 /**
  *  the iPhone 6 device resolution
@@ -61,6 +78,7 @@
  *  @return device's width and height in CGSize
  */
 + (CGSize)iPhone6Resolution;
++ (CGSize)iPhone7Resolution;
 
 /**
  *  the iPhone 6+ device resolution
@@ -68,6 +86,7 @@
  *  @return device's width and height in CGSize
  */
 + (CGSize)iPhone6PlusResolution;
++ (CGSize)iPhone7PlusResolution;
 
 /**
  *  the iPad Mini device resolution
@@ -82,5 +101,12 @@
  *  @return device's width and height in CGSize
  */
 + (CGSize)iPadResolution;
+
+/**
+ *  the 12.9" size iPad device resolution
+ *
+ *  @return device's width and height in CGSize
+ */
++ (CGSize)iPadProResolution;
 
 @end

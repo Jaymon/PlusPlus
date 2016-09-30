@@ -1,6 +1,5 @@
 //  Created by Jay Marcyes on 6/20/16.
 
-
 #import "UIDevice+Plus.h"
 
 #include <sys/sysctl.h>
@@ -61,6 +60,12 @@
         } else if ([platform hasSuffix:@"8,4"]) {
             type = @"iPhone SE";
             
+        } else if ([platform anySuffix:@[@"9,1", @"9,3"]]) {
+            type = @"iPhone 7";
+            
+        } else if ([platform anySuffix:@[@"9,2", @"9,4"]]) {
+            type = @"iPhone 7 Plus";
+            
         } else {
             type = @"iPhone Unknown";
         }
@@ -111,6 +116,12 @@
     
         if ([platform anySuffix:@[@"1,1", @"1,2"]]) {
             type = @"Apple Watch";
+            
+        } else if ([platform anySuffix:@[@"2,6", @"2,7"]]) {
+            type = @"Apple Watch Series 1";
+            
+        } else if ([platform anySuffix:@[@"2,3", @"2,4"]]) {
+            type = @"Apple Watch Series 2";
             
         } else {
             type = @"Apple Watch Unknown";
