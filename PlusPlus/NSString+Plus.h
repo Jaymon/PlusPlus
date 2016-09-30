@@ -21,7 +21,7 @@
  *
  *  @return YES if one of the suffixes matches, NO otherwise
  */
-- (bool)anySuffix:(NSArray <NSString *> *)suffixes;
+- (bool)anySuffix:(nonnull NSArray <NSString *> *)suffixes;
 
 /**
  *  given a list of strings, return YES if one of them matches this string exactly
@@ -30,7 +30,7 @@
  *
  *  @return YES if one string matches, NO otherwise
  */
-- (bool)any:(NSArray <NSString *> *)strings;
+- (bool)any:(nonnull NSArray <NSString *> *)strings;
 
 
 /**
