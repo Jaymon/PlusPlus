@@ -77,7 +77,6 @@
             tagLengthCount += tag.length + 1;
             scanner.scanLocation += [scanner isAtEnd] ? 0 : 1; // move passed closing >
             
-            ///NSTextCheckingResult *match = [tag firstRegularExpressionMatch:@"/^<a\\s+/i"];
             NSTextCheckingResult *match = [tag firstRegularExpressionMatch:@"(?i)^<a\\s+"];
             if (match) {
                 

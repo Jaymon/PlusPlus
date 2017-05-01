@@ -34,7 +34,7 @@
 
 
 /**
- *  returns an array of the links found in the href attribute of the string's HTML <a> tags
+ *  returns an array of the links found in the href attribute of the string's HTML "a" tags
  *
  *  what is a little strange is this will return those URLs with a range for the string that
  *  assumes the string is plain text, an example will illustrate
