@@ -1,7 +1,7 @@
 //  Created by Jay Marcyes on 5/01/2017.
 
 #import "UIApplication+Plus.h"
-#import <stdatomic.h>
+#import <stdatomic.h> // http://en.cppreference.com/w/c/atomic
 
 
 @implementation UIApplication (Plus)
